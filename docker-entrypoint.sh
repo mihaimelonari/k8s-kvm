@@ -54,7 +54,7 @@ echo "Found network bridge IP '${NETWORK_BRIDGE_IP}' for network bridge name '${
 #
 # Enable the VM's network bridge.
 #
-
+mkdir -p /etc/qemu
 echo "allow ${NETWORK_BRIDGE_NAME}" >/etc/qemu/bridge.conf
 
 #
