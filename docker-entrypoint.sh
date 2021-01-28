@@ -181,7 +181,7 @@ eval exec "$TASKSET" /usr/local/bin/qemu-system-x86_64 \
   -m "$MEMORY" \
   -enable-kvm \
   -device virtio-net-pci,netdev="$NETWORK_TAP_NAME",mac="$MAC_ADDRESS" \
-  -netdev tap,id="$NETWORK_TAP_NAME",ifname="$NETWORK_TAP_NAME",downscript=no \
+  -netdev tap,id="$NETWORK_TAP_NAME",ifname="$NETWORK_TAP_NAME",script=/etc/qemu-ifup,downscript=no \
   -fw_cfg name=opt/org.flatcar-linux/config,file="$RAW_IGNITION_DIR"/final.json \
   -drive if=none,file="$ROOTFS",format=raw,discard=on,id=rootfs \
   -device virtio-blk-pci,drive=rootfs,serial=rootfs \
