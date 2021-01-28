@@ -1,6 +1,27 @@
-FROM fedora:33
+FROM registry.gitlab.com/qemu-project/qemu/qemu/fedora:latest
 
-RUN dnf -y update && \
+ENV QEMU_VERSION=v5.2.0
+
+WORKDIR /root
+
+RUN git clone --depth 1 --branch ${QEMU_VERSION} git://git.qemu.org/qemu.git && \
+    cd qemu && \
+    mkdir build && \
+    cd build && \
+    ../configure \
+        --enable-werror \
+        --enable-trace-backend=simple \
+        --enable-debug \
+        --target-list="x86_64-softmmu" \
+        --disable-gcrypt \
+        --enable-nettle \
+        --enable-docs \
+        --enable-fdt=system \
+        --enable-slirp=system \
+        --enable-capstone=system && \
+    make -j2 && \
+    make install && \
+    dnf -y update && \
     dnf -y install \
         bridge-utils \
         gnupg \
@@ -8,15 +29,13 @@ RUN dnf -y update && \
         libattr \
         libattr-devel \
         net-tools \
-        qemu-img \
-        qemu-kvm \
-        qemu-system-x86 \
         socat \
-        xfsprogs \
-    && dnf clean all
+        xfsprogs && \
+    dnf clean all
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY qemu-ifup /etc/qemu-ifup
 COPY qemu-shutdown /qemu-shutdown
 COPY qemu-node-setup /qemu-node-setup
+
 ENTRYPOINT ["/docker-entrypoint.sh"]

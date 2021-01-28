@@ -172,7 +172,7 @@ base64 <"${CLOUD_CONFIG_PATH}" -d | gunzip >"$RAW_IGNITION_DIR/${ROLE}.json"
   -ntp-servers="${NTP_SERVERS}" -out="$RAW_IGNITION_DIR/final.json"
 
 #added PMU off to `-cpu host,pmu=off` https://github.com/giantswarm/k8s-kvm/pull/14
-eval exec "$TASKSET" /usr/bin/qemu-system-x86_64 \
+eval exec "$TASKSET" /usr/local/bin/qemu-system-x86_64 \
   -name "$HOSTNAME" \
   -nographic \
   -machine type=q35,accel=kvm \
