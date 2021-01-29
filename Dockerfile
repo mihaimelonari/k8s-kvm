@@ -10,12 +10,12 @@ RUN git clone --depth 1 --branch ${QEMU_VERSION} git://git.qemu.org/qemu.git && 
     cd build && \
     ../configure \
         --enable-werror \
+        --enable-trace-backends=simple \
         --enable-debug \
         --extra-cflags="-fno-omit-frame-pointer" \
         --target-list="x86_64-softmmu" \
         --disable-gcrypt \
         --enable-nettle \
-        --enable-docs \
         --enable-fdt=system \
         --enable-slirp=system \
         --enable-capstone=system && \
