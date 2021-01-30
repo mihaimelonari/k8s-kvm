@@ -171,6 +171,8 @@ base64 <"${CLOUD_CONFIG_PATH}" -d | gunzip >"$RAW_IGNITION_DIR/${ROLE}.json"
 /qemu-node-setup -bridge-ip="$NETWORK_BRIDGE_IP" -dns-servers="$DNS_SERVERS" -hostname="$HOSTNAME" -main-config="${RAW_IGNITION_DIR}/${ROLE}.json" \
   -ntp-servers="${NTP_SERVERS}" -out="$RAW_IGNITION_DIR/final.json"
 
+cat /root/qemu/build/trace/trace-events-all | grep "(" | grep -v "#" | cut -f 1 -d "(" > /tmp/events
+
 #added PMU off to `-cpu host,pmu=off` https://github.com/giantswarm/k8s-kvm/pull/14
 eval exec "$TASKSET" /root/qemu/build/qemu-system-x86_64 \
   -name "$HOSTNAME" \
@@ -196,5 +198,5 @@ eval exec "$TASKSET" /root/qemu/build/qemu-system-x86_64 \
   -monitor unix:/qemu-monitor,server,nowait \
   -kernel "$KERNEL" \
   -initrd "$INITRD" \
-  -trace events=/root/qemu/build/trace/trace-events-all \
+  -trace events=/tmp/events \
   -append "\"console=ttyS0 root=/dev/disk/by-id/virtio-rootfs rootflags=rw flatcar.first_boot=1\""
